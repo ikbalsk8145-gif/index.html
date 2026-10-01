@@ -1,0 +1,100 @@
+from pathlib import Path
+import zipfile
+
+base = Path("/mnt/data/ALL_Bengal_TRT_Website")
+base.mkdir(parents=True, exist_ok=True)
+
+html = """<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ALL Bengal TRT</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <div class="brand"><div class="logo">AB</div><div><strong>ALL Bengal TRT</strong><small>Workers' Organization</small></div></div>
+  <nav>
+    <a href="#home">Home</a><a href="#about">About</a><a href="#services">Services</a><a href="#registration">Registration</a>
+  </nav>
+</header>
+
+<main>
+<section id="home" class="hero">
+  <div>
+    <p class="tag">ঐক্য • অধিকার • সংগঠন</p>
+    <h1>ALL Bengal TRT</h1>
+    <p>শ্রমিকদের অধিকার, ঐক্য ও কল্যাণের জন্য একটি সংগঠিত প্ল্যাটফর্ম।</p>
+    <a class="btn" href="#registration">সদস্যপদ আবেদন করুন</a>
+  </div>
+</section>
+
+<section id="about" class="section">
+  <h2>শ্রমিক ইউনিয়নের সদস্যপদ সংক্রান্ত নিয়ম ও শর্তাবলী</h2>
+  <div class="cards">
+    <article><b>১. যোগ্যতা</b><p>সক্রিয় নিয়মিত বা চুক্তিভিত্তিক কর্মী হতে হবে এবং ন্যূনতম বয়স ১৮ বছর বা প্রযোজ্য শ্রম আইনে নির্ধারিত বয়স হতে হবে।</p></article>
+    <article><b>২. সংবিধান মান্য</b><p>ইউনিয়নের সংবিধান, উপ-নিয়ম ও গণতান্ত্রিক সিদ্ধান্ত মেনে চলতে হবে।</p></article>
+    <article><b>৩. চাঁদা</b><p>ভর্তি ফি ও মাসিক চাঁদা নিয়ম অনুযায়ী প্রদান করতে হবে। টানা ৩ মাস বকেয়া থাকলে ভোটাধিকার বা সুবিধা সাময়িকভাবে স্থগিত হতে পারে।</p></article>
+    <article><b>৪. স্বার্থের সংঘাত</b><p>একই প্রতিষ্ঠানে কর্মরত অবস্থায় প্রতিদ্বন্দ্বী ইউনিয়নের সক্রিয় সদস্যপদ রাখা যাবে না।</p></article>
+    <article><b>৫. শৃঙ্খলা</b><p>কর্মস্থলে সৌহার্দ্যপূর্ণ আচরণ, বৈষম্য ও সহিংসতা পরিহার এবং সংগঠনের গোপনীয়তা রক্ষা করতে হবে।</p></article>
+    <article><b>৬. অংশগ্রহণ</b><p>সাধারণ সভা, জরুরি সভা ও শান্তিপূর্ণ সাংগঠনিক কর্মসূচিতে যথাসম্ভব অংশগ্রহণ করতে হবে।</p></article>
+    <article><b>৭. সদস্যপদ বাতিল</b><p>চাকরি স্থায়ীভাবে শেষ, বরখাস্ত বা অবসরের ক্ষেত্রে সদস্যপদ শেষ হতে পারে। শৃঙ্খলাভঙ্গের ক্ষেত্রে নোটিশ ও শুনানির পর ব্যবস্থা নেওয়া হতে পারে।</p></article>
+  </div>
+</section>
+
+<section id="services" class="section alt">
+  <h2>আমাদের কার্যক্রম</h2>
+  <div class="cards three">
+    <article><h3>সদস্যপদ</h3><p>নতুন সদস্যদের জন্য অনলাইন আবেদন ব্যবস্থা।</p></article>
+    <article><h3>শ্রমিক অধিকার</h3><p>শ্রমিকদের অধিকার ও সংগঠিত অংশগ্রহণ সম্পর্কে তথ্য।</p></article>
+    <article><h3>সংগঠন</h3><p>সভা, কর্মসূচি ও সাংগঠনিক যোগাযোগের জন্য প্ল্যাটফর্ম।</p></article>
+  </div>
+</section>
+
+<section id="registration" class="section">
+  <h2>সদস্যপদ নিবন্ধন</h2>
+  <form id="regForm">
+    <label>আবেদনকারীর নাম<input name="name" required></label>
+    <label>Gmail ID<input type="email" name="email" required></label>
+    <label>মোবাইল নম্বর<input type="tel" name="mobile" required></label>
+    <label>বয়স<input type="number" name="age" min="18" required></label>
+    <label>প্রতিষ্ঠান / কর্মস্থল<input name="workplace" required></label>
+    <label>চাকরির ধরন<select name="employment" required><option value="">নির্বাচন করুন</option><option>নিয়মিত</option><option>চুক্তিভিত্তিক</option><option>অন্যান্য</option></select></label>
+    <label>ঠিকানা<textarea name="address" rows="3" required></textarea></label>
+    <label class="check"><input type="checkbox" required> আমি সদস্যপদের নিয়ম ও শর্তাবলী পড়েছি এবং সম্মত।</label>
+    <label>স্বাক্ষর<input name="signature" required></label>
+    <label>তারিখ<input type="date" name="date" required></label>
+    <button class="btn" type="submit">আবেদন জমা দিন</button>
+  </form>
+  <p id="message" class="message"></p>
+</section>
+</main>
+
+<footer><p>© 2026 ALL Bengal TRT. All rights reserved.</p></footer>
+
+<script>
+document.getElementById('regForm').addEventListener('submit', function(e){
+  e.preventDefault();
+  document.getElementById('message').textContent =
+    'ডেমো আবেদন সফলভাবে গ্রহণ করা হয়েছে। অনলাইন ডাটাবেসে সংরক্ষণ করতে পরবর্তী ধাপে backend/Google Sheets সংযোগ করতে হবে।';
+  this.reset();
+});
+</script>
+</body>
+</html>
+"""
+
+css = """*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,"Noto Sans Bengali",sans-serif;color:#182230;background:#fff;line-height:1.7}header{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #e5e7eb;padding:12px 6%;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:10px}.brand strong{display:block;font-size:20px}.brand small{color:#64748b}.logo{width:44px;height:44px;border-radius:10px;background:#123b63;color:#fff;display:grid;place-items:center;font-weight:800}nav{display:flex;gap:18px;flex-wrap:wrap}nav a{color:#182230;text-decoration:none;font-weight:600}.hero{min-height:72vh;padding:90px 7%;display:flex;align-items:center;background:linear-gradient(135deg,#eaf3fb,#fff)}.hero h1{font-size:clamp(42px,7vw,76px);margin:0 0 10px;color:#123b63}.hero p{max-width:680px;font-size:20px}.tag{font-weight:700;color:#b45309}.btn{display:inline-block;border:0;border-radius:8px;background:#123b63;color:#fff;padding:12px 20px;text-decoration:none;font-weight:700;cursor:pointer}.section{padding:70px 7%;max-width:1250px;margin:auto}.section h2{text-align:center;color:#123b63;margin-top:0;margin-bottom:30px}.alt{max-width:none;background:#f7fafc}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.cards.three{grid-template-columns:repeat(3,minmax(0,1fr))}.cards article{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:22px;box-shadow:0 4px 15px rgba(0,0,0,.04)}.cards article b{color:#123b63}form{max-width:760px;margin:auto;display:grid;gap:16px}label{font-weight:700}input,select,textarea{width:100%;margin-top:6px;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font:inherit;background:#fff}.check{display:flex;align-items:flex-start;gap:8px;font-weight:500}.check input{width:auto;margin-top:7px}.message{max-width:760px;margin:20px auto;color:#166534;font-weight:700}footer{text-align:center;background:#123b63;color:#fff;padding:25px}@media(max-width:800px){header{align-items:flex-start;flex-direction:column}nav{gap:10px}.hero{min-height:60vh;padding:65px 6%}.section{padding:50px 6%}.cards,.cards.three{grid-template-columns:1fr}.hero p{font-size:18px}}
+"""
+
+(base/"index.html").write_text(html, encoding="utf-8")
+(base/"styles.css").write_text(css, encoding="utf-8")
+
+zip_path = Path("/mnt/data/ALL_Bengal_TRT_Website_Ready.zip")
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
+    z.write(base/"index.html", "ALL_Bengal_TRT_Website/index.html")
+    z.write(base/"styles.css", "ALL_Bengal_TRT_Website/styles.css")
+
+print(f"Website files created: {base/'index.html'}, {base/'styles.css'}")
+print(f"ZIP created: {zip_path}")
